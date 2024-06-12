@@ -41,7 +41,6 @@ export default {
           end: "+=3000",
           pin: true,
           scrub: 1,
-          markers: true,
           invalidateOnRefresh: true,
           anticipatePin: 1,
         },
