@@ -1,24 +1,59 @@
+<script setup>
+import { headerNav } from "@/constants";
+</script>
+
 <template>
   <header id="header" role="header">
     <div class="header__inner">
       <h1 class="header__logo">
         <a href="#">portfolio <em>vue.js</em></a>
       </h1>
-      <nav class="header__nav" role="navigation" aria-label="메인 메뉴">
+      <nav class="header__nav" :class="{ show: isNavVisible }" role="navigation" aria-label="메인 메뉴">
         <ul>
-          <li><a href="#intro">intro</a></li>
-          <li><a href="#skill">skill</a></li>
-          <li><a href="#site">site</a></li>
-          <li><a href="#portfolio">portfolio</a></li>
-          <li><a href="#contact">contact</a></li>
+          <li v-for="(nav, index) in headerNav" :key="index">
+            <a :href="nav.url" @click="scrollLink($event)">{{ nav.title }}</a>
+          </li>
         </ul>
       </nav>
-      <div class="header__mobile" id="headerToggle" aria-controls="primary-menu" aria-expanded="false" role="button" tabindex="0">
+      <div
+        class="header__nav__mobile"
+        id="headerToggle"
+        aria-controls="primary-menu"
+        aria-expanded="false"
+        role="button"
+        tabindex="0"
+        @click="toggleMobileMenu"
+      >
         <span></span>
       </div>
     </div>
   </header>
 </template>
+
+<script>
+export default {
+  data() {
+    return {
+      isNavVisible: false,
+    };
+  },
+  methods: {
+    toggleMobileMenu() {
+      this.isNavVisible = !this.isNavVisible;
+    },
+    scrollLink(event) {
+      event.preventDefault();
+
+      const targetID = event.target.getAttribute("href");
+      const targetElement = document.querySelector(targetID);
+
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+      }
+    },
+  },
+};
+</script>
 
 <style lang="scss">
 @import "@/assets/scss/mixin";
@@ -37,15 +72,49 @@
       text-align: center;
       text-transform: uppercase;
       line-height: 1;
+      font-family: var(--fontF);
+      font-weight: 400;
       em {
+        font-family: var(--fontF);
         font-size: 14px;
         display: block;
         font-weight: 400;
-        color: var(--black200);
+        color: var(--black100);
       }
     }
     .header__nav {
-      display: none;
+      @media (max-width: 800px) {
+        display: none;
+
+        &.show {
+          display: block;
+          ul {
+            display: block;
+            position: absolute;
+            right: 0;
+            top: 68px;
+            background-color: rgba(116, 99, 99, 0.1);
+            backdrop-filter: blur(15px);
+            z-index: 10000;
+            min-width: 150px;
+            padding: 20px 0;
+            li {
+              display: block;
+              text-align: right;
+              a {
+                display: inline-block;
+                padding: 10px;
+              }
+            }
+          }
+        }
+        &.show + .header__nav__mobile span::before {
+          width: 20px;
+        }
+        &.show + .header__nav__mobile span::after {
+          width: 20px;
+        }
+      }
       li {
         display: inline;
         a {
@@ -72,12 +141,15 @@
         }
       }
     }
-    .header__mobile {
-      //   display: none;
+    .header__nav__mobile {
+      display: none;
       width: 40px;
       height: 40px;
-      background-color: #ccc;
       cursor: pointer;
+
+      @media (max-width: 800px) {
+        display: block;
+      }
       span {
         display: block;
         width: 40px;
