@@ -27,7 +27,7 @@ import { footerText } from "@/constants/index";
         </div>
       </div>
       <div class="footer__right">
-        © 2023 webstoryboy<br />
+        © 2024 Miento<br />
         이 사이트는 뷰를 이용하여 제작하였습니다.
       </div>
     </div>
